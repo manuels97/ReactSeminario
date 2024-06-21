@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { agregarTipoPropiedad } from './TipoPropiedadPageServices';
-import '../../assets/styles/tipoPropiedadStyles/NewTipoPropiedad.css'
+import '../../assets/styles/tipoPropiedadStyles/NewTipoPropiedad.css';
 
 const NewTipoPropiedadPage = () => {
     const [nombre, setNombre] = useState('');
-    const [mensaje, setMensaje] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -19,11 +18,11 @@ const NewTipoPropiedadPage = () => {
         try {
             const response = await agregarTipoPropiedad(nombre);
             console.log("Respuesta del servidor:", response);
-            if (response.success) {
-                alert('Tipo de propiedad agregado correctamente.');
+            if (response && response["code: "] === 200) {
                 navigate('/');
+                alert('Tipo de propiedad agregado correctamente.');
             } else {
-                alert(response["mensaje: "] );
+                alert(`Error al agregar tipo de propiedad: ${response["mensaje: "]}`);
             }
         } catch (error) {
             console.error("Error al agregar tipo de propiedad:", error);
@@ -34,7 +33,6 @@ const NewTipoPropiedadPage = () => {
     return (
         <div className="container">
             <h1>Crear Nuevo Tipo de Propiedad</h1>
-            {mensaje && <div className="alert alert-info">{mensaje}</div>}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="nombre">Nombre:</label>

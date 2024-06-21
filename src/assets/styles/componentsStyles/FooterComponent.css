@@ -1,0 +1,15 @@
+.footer {
+    background-color: #368be0; /* Mismo color que el navbar */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+  }
+  
+  .footer .container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  

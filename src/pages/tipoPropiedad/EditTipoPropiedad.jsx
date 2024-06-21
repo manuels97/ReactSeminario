@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { obtenerTiposPropiedad, editarTipoPropiedad} from './TipoPropiedadPageServices';
-
-
+import { useNavigate, useParams } from 'react-router-dom';
+import { obtenerTiposPropiedad, editarTipoPropiedad } from './TipoPropiedadPageServices';
 
 const EditTipoPropiedadPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [tiposPropiedad, setTiposPropiedad] = useState([]);
     const [nombreActual, setNombreActual] = useState('');
     const [nombreNuevo, setNombreNuevo] = useState('');
     const [mensaje, setMensaje] = useState('');
@@ -19,6 +16,7 @@ const EditTipoPropiedadPage = () => {
                 const tipoPropiedad = tipos.find(tipo => tipo.id === parseInt(id));
                 if (tipoPropiedad) {
                     setNombreActual(tipoPropiedad.nombre);
+                    setNombreNuevo(tipoPropiedad.nombre); 
                 } else {
                     throw new Error('Tipo de propiedad no encontrado');
                 }
@@ -32,16 +30,17 @@ const EditTipoPropiedadPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response =await editarTipoPropiedad(id, nombreNuevo);
-            setMensaje('Tipo de propiedad actualizado correctamente.');
-            navigate('/');
-            alert(response["Status: "])
-            
-        } catch (error) {
-            console.error("Error al editar tipo de propiedad:", error);
-            setMensaje('Error al editar el tipo de propiedad. Por favor, inténtelo de nuevo más tarde.');
-        }
+            const respuesta = await editarTipoPropiedad(id, nombreNuevo);
+            console.log()
+            if(respuesta["code: "]=== 400){
+                alert(`Error: ${respuesta["mensaje: "]}`)
+                setMensaje('Error al editar el tipo de propiedad. Por favor, inténtelo de nuevo más tarde.');
+            } else{
+                setMensaje('Tipo de propiedad actualizado correctamente.');
+                alert("Tipo propiedad actualizado correctamente")
+                navigate('/tipo_propiedad');
+            }
+       
     };
 
     return (
@@ -55,7 +54,7 @@ const EditTipoPropiedadPage = () => {
                         type="text"
                         className="form-control"
                         id="nombre"
-                        value={nombreActual}
+                        value={nombreNuevo}
                         onChange={(e) => setNombreNuevo(e.target.value)}
                         required
                     />
