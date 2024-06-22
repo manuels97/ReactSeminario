@@ -6,27 +6,28 @@ import '../../assets/styles/tipoPropiedadStyles/NewTipoPropiedad.css';
 const NewTipoPropiedadPage = () => {
     const [nombre, setNombre] = useState('');
     const navigate = useNavigate();
+    const [mensaje, setMensaje] = useState('');
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (nombre.trim() === '') {
             alert('El nombre no puede estar vacío.');
             return;
         }
 
         try {
-            const response = await agregarTipoPropiedad(nombre);
-            console.log("Respuesta del servidor:", response);
-            if (response && response["code: "] === 200) {
-                navigate('/');
+                const data=await agregarTipoPropiedad(nombre);
+                if (data.handled) {
+                    setMensaje("Error al comunicarse con el servidor")
+                    return;
+                }
+                navigate('/tipo_propiedad');
                 alert('Tipo de propiedad agregado correctamente.');
-            } else {
-                alert(`Error al agregar tipo de propiedad: ${response["mensaje: "]}`);
-            }
         } catch (error) {
-            console.error("Error al agregar tipo de propiedad:", error);
-            alert('Error al comunicarse con el servidor. Por favor, inténtelo de nuevo más tarde.');
+
+            console.error("Error al agregar tipo de propiedad:", error["mensaje: "]);
+            alert(error["mensaje: "]);
         }
     };
 
@@ -46,6 +47,8 @@ const NewTipoPropiedadPage = () => {
                     />
                 </div>
                 <button type="submit" className="btn btn-primary">Guardar</button>
+                {mensaje && <div className="alert alert-info">{mensaje}</div>}
+
             </form>
         </div>
     );

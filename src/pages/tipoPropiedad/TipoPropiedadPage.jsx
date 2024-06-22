@@ -8,20 +8,26 @@ const TipoPropiedadPage = () => {
     const [tiposPropiedad, setTiposPropiedad] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+    const [mensaje, setMensaje] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const tipos = await obtenerTiposPropiedad();
+                if (tipos.handled) {
+                    setMensaje("Error al comunicarse con el servidor")
+                    return;
+                }
                 setTiposPropiedad(tipos);
             } catch (error) {
                 console.error("Error al establecer tipos de propiedad:", error);
+                setMensaje(error.message);
                 setTiposPropiedad([]);
             }
         };
         fetchData();
     }, []);
-
+    
     const handleEliminar = async (id) => {
         setDeleteId(id);
         setShowAlert(true);
@@ -31,18 +37,17 @@ const TipoPropiedadPage = () => {
         if (deleteId) {
             try {
                 const resultado = await eliminarTipoPropiedad(deleteId);
-                if (resultado && resultado["code: "] === 200) { 
+                if (resultado.handled) {
+                    setMensaje("Error al comunicarse con el servidor")
+                    return;
+                }
                     setTiposPropiedad(prevTiposPropiedad => prevTiposPropiedad.filter(tipo => tipo.id !== deleteId));
                     alert(resultado["mensaje: "]); 
                     setShowAlert(false);
-                } else {
-                    console.error("Error al eliminar tipo de propiedad:", resultado);
-                    alert(`Error al eliminar tipo de propiedad: ${resultado["mensaje: "]}`); 
-                    setShowAlert(false);
                 }
-            } catch (error) {
-                console.error("Error al eliminar tipo de propiedad:", error);
-                alert("Error al eliminar tipo de propiedad");
+            catch (error) {
+                console.error("Error al eliminar tipo de propiedad:", error["mensaje: "]);
+                alert(error["mensaje: "]);
                 setShowAlert(false);
             }
         }
@@ -64,6 +69,7 @@ const TipoPropiedadPage = () => {
                         <th>Acciones</th>
                     </tr>
                 </thead>
+                {mensaje && <div className="alert alert-info">{mensaje}</div>}
                 <tbody>
                     {tiposPropiedad.map(tipo => (
                         <tr key={tipo.id}>

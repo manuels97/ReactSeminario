@@ -30,17 +30,18 @@ const EditTipoPropiedadPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-            const respuesta = await editarTipoPropiedad(id, nombreNuevo);
-            console.log()
-            if(respuesta["code: "]=== 400){
-                alert(`Error: ${respuesta["mensaje: "]}`)
-                setMensaje('Error al editar el tipo de propiedad. Por favor, inténtelo de nuevo más tarde.');
-            } else{
-                setMensaje('Tipo de propiedad actualizado correctamente.');
+            try{
+                const data=await editarTipoPropiedad(id, nombreNuevo);
+                if (data.handled) {
+                    setMensaje("Error al comunicarse con el servidor")
+                    return;
+                }
                 alert("Tipo propiedad actualizado correctamente")
                 navigate('/tipo_propiedad');
+            }catch(error){
+                alert(error["mensaje: "])
+                setMensaje('No se puedo actualizar el nombre');
             }
-       
     };
 
     return (

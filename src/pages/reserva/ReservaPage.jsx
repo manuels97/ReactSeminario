@@ -1,36 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { obtenerReservas, eliminarReserva } from './reservaServices';
+import '../../assets/styles/reservasStyles/ReservasPage.css';
+import AlertComponent from '../../components/AlertComponent'; 
 
 const ReservaPage = () => {
     const [reservas, setReservas] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [reservaIdToDelete, setReservaIdToDelete] = useState(null);
+    const [mensaje, setMensaje] = useState('');
 
     useEffect(() => {
         const fetchReservas = async () => {
-            const data = await obtenerReservas();
-            setReservas(data);
+            try {
+                const data = await obtenerReservas();
+                if (data.handled) {
+                    setMensaje("Error al comunicarse con el servidor")
+                    return;
+                }
+                setReservas(data);
+            } catch (error) {
+                console.error("Error al obtener reservas:", error);
+                setMensaje(error.message);
+                setReservas([]);
+            }
         };
 
         fetchReservas();
     }, []);
 
+
     const handleEliminar = async (id) => {
-        if (window.confirm('¿Está seguro de eliminar esta reserva?')) {
-            const resultado = await eliminarReserva(id);
-            if (resultado["code: "]===200) {
-                setReservas(reservas.filter(reserva => reserva.id !== id));
-                alert("Eliminada correctamente")
-            } else {
-                console.log("error: ",resultado["mensaje: "]);
-                alert(`Error al eliminar tipo de propiedad: ${resultado["mensaje: "]}`);
+        setReservaIdToDelete(id);
+        setShowModal(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        setShowModal(false);
+        try {
+            const data = await eliminarReserva(reservaIdToDelete);
+            if (data.handled) {
+                setMensaje("Error al comunicarse con el servidor")
+                return;
             }
+                setReservas(reservas.filter(reserva => reserva.id !== reservaIdToDelete));
+                alert("Reserva eliminada correctamente");
+        } catch (error) {
+            console.error('Error al eliminar la reserva: ', error["mensaje: "]);
+            alert(error["mensaje: "])
         }
+    };
+    
+
+    const handleCloseModal = () => {
+        setShowModal(false);
     };
 
     return (
         <div>
             <h1>Listado de Reservas</h1>
-            <Link to="/reserva/new">Crear Nueva Reserva</Link>
+            <Link className="link" to="/reserva/new">Crear Nueva Reserva</Link>
             <table>
                 <thead>
                     <tr>
@@ -41,6 +70,8 @@ const ReservaPage = () => {
                         <th>Valor Total</th>
                         <th>Acciones</th>
                     </tr>
+                    {mensaje && <div className="alert alert-info">{mensaje}</div>}
+
                 </thead>
                 <tbody>
                     {reservas.map(reserva => (
@@ -58,6 +89,15 @@ const ReservaPage = () => {
                     ))}
                 </tbody>
             </table>
+
+            {/* Modal de confirmación */}
+            <AlertComponent
+                show={showModal}
+                handleClose={handleCloseModal}
+                handleConfirm={handleConfirmDelete}
+                title="Confirmar Eliminación"
+                message="¿Está seguro de eliminar esta reserva?"
+            />
         </div>
     );
 };

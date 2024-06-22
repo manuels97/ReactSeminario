@@ -37,17 +37,19 @@ const EditReserva = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-            const respuesta=await editarReserva(id, propiedad, inquilino, fechaDesde, cantidadNoches, valorTotal);
-            console.log("ESTo retorna: " ,respuesta)
-            if(respuesta["code: "]=== 400 || respuesta["code: "]=== 404){
-                console.error('Error al editar reserva: ', respuesta["mensaje: "]);
-                alert(respuesta["mensaje: "])
-                setMensaje('Error al editar reserva.');
-                }
-                else{
-                    alert('Reserva actualizada correctamente.');
-                    navigate('/reserva');
-                }
+        try{
+            const data = await editarReserva(id, propiedad, inquilino, fechaDesde, cantidadNoches, valorTotal);
+            if (data.handled) {
+                setMensaje("Error al comunicarse con el servidor")
+                return;
+            }
+            alert(data["mensaje: "])
+            navigate('/reserva');
+        }catch(error){
+            console.error('Error al editar reserva: ', error["mensaje: "]);
+            alert(error["mensaje: "])
+            setMensaje('Error al editar reserva.');
+        }
         }
 
     return (

@@ -5,21 +5,49 @@ const API_URL = 'http://localhost/reservas';
 export const obtenerReservas = async () => {
     try {
         const response = await axios.get(API_URL);
-        console.log("Se encontraron las reservas",response.data.datos)
-        return response.data.datos;
+        console.log("Se encontraron las reservas",response.data)
+        if (response.data.code !== 200){
+            throw response.data.datos
+        }
+        return response.data.datos
     } catch (error) {
-        throw new Error('Error al obtener las reservas');
+        if(error.response.status===404){ //Si es error de url o sv lo aviso aca
+            console.error(error.response); 
+            alert("Error al comunicarse con el servidor");
+            return { handled: true };
+        }
+        throw error;
     }
 };
 
+//Agregar a la api error de reserva antes de la fecha act
 export const crearReserva = async (propiedad, inquilino, fechaDesde, cantidadNoches, valorTotal) => {
-    try {
-        const response = await axios.post(API_URL, { propiedad, inquilino, fechaDesde, cantidadNoches, valorTotal });
-        return response.data;
+    try {       
+        const response = await axios.post(API_URL, {
+            propiedad_id: propiedad,
+            inquilino_id: inquilino,
+            fecha_desde: fechaDesde,
+            cantidad_noches: cantidadNoches,
+            valor_total: valorTotal
+        });
+        const data= response.data
+        if (!(data["code: "] >= 200 && data["code: "] < 300)){
+            console.log("COID;",data["code: "])
+            throw response.data
+        }
+        return data
     } catch (error) {
-        throw new Error('Error al crear la reserva');
+        if(error.code===404){ //Si es error de url o sv lo aviso aca
+            console.error(error.response); 
+            alert("Error al comunicarse con el servidor");
+            return { handled: true };
+        }
+        throw error.response.data;
     }
 };
+
+
+
 
 
 export const editarReserva = async (id, propiedad, inquilino, fechaDesde, cantidadNoches, valorTotal) => {
@@ -31,22 +59,38 @@ export const editarReserva = async (id, propiedad, inquilino, fechaDesde, cantid
             cantidad_noches: cantidadNoches,
             valor_total: valorTotal
         });
-        return response.data;
+        const data= response.data
+        if (!(data["code: "] >= 200 && data["code: "] < 300)){
+            console.log("COID;",data["code: "])
+            throw response.data
+        }
+        return data
     } catch (error) {
-        console.error(error);
-        return error.response.data;
+        if(error.code===404){ //Si es error de url o sv lo aviso aca
+            console.error(error.response); 
+            alert("Error al comunicarse con el servidor");
+            return { handled: true };
+        }
+        throw error.response.data;
     }
 };
 
-export async function eliminarReserva(id) {
+export const eliminarReserva = async (id) => {
     try {
         const response = await axios.delete(`${API_URL}/${id}`);
-        return response.data;
-    } catch (error) {
-        if (error.response && error.response.data) {
-            return error.response.data
-        } else {
-            throw new Error('Error al eliminar la reserva');
+        const data= response.data;
+        if (!(data["code: "] >= 200 && data["code: "] < 300)){
+            console.log("COID;",data["code: "])
+            throw response.data
         }
+        return data
+    } catch (error) {
+        if(error.code===404){ //Si es error de url o sv lo aviso aca
+            console.error(error.response); 
+            alert("Error al comunicarse con el servidor");
+            return { handled: true };
+        }
+        throw error.response.data;
     }
 };
+

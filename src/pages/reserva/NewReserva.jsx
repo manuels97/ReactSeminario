@@ -15,22 +15,81 @@ const NewReserva = () => {
         e.preventDefault();
         try {
             const data = await crearReserva(propiedad, inquilino, fechaDesde, cantidadNoches, valorTotal);
-            setMensaje(data.message);
-            // Si necesitas hacer algo después de crear la reserva, como redirigir a otra página, aquí lo haces.
-            navigate.push('/reserva');
+            console.log("RETORNO: ",data)
+            if (data.handled) {
+                setMensaje("Error al comunicarse con el servidor")
+                return;
+            }
+            alert(data["mensaje: "])
+            navigate('/reserva');
         } catch (error) {
-            console.error('Error al crear reserva:', error);
-            setMensaje('Error al crear reserva.');
+            console.error('Error al crear ddddddreserva:', error);
+            setMensaje(error["mensaje: "]);
         }
     };
+    
 
     return (
         <div>
             <h1>Nueva Reserva</h1>
             {mensaje && <div>{mensaje}</div>}
             <form onSubmit={handleSubmit}>
-                {/* Inputs para propiedad, inquilino, fechaDesde, cantidadNoches, valorTotal */}
-                <button type="submit">Guardar Reserva</button>
+                <div className="form-group">
+                    <label htmlFor="propiedad">Propiedad:</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="propiedad"
+                        value={propiedad}
+                        onChange={(e) => setPropiedad(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="inquilino">Inquilino:</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="inquilino"
+                        value={inquilino}
+                        onChange={(e) => setInquilino(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="fechaDesde">Fecha Desde:</label>
+                    <input
+                        type="date"
+                        className="form-control"
+                        id="fechaDesde"
+                        value={fechaDesde}
+                        onChange={(e) => setFechaDesde(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="cantidadNoches">Cantidad Noches:</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        id="cantidadNoches"
+                        value={cantidadNoches}
+                        onChange={(e) => setCantidadNoches(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="valorTotal">Valor Total:</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        id="valorTotal"
+                        value={valorTotal}
+                        onChange={(e) => setValorTotal(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary">Guardar Reserva</button>
             </form>
         </div>
     );
