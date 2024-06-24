@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { agregarTipoPropiedad } from './TipoPropiedadPageServices';
+import { agregarTipoPropiedad } from '../../services/TipoPropiedadPageServices';
 import '../../assets/styles/tipoPropiedadStyles/NewTipoPropiedad.css';
 
 const NewTipoPropiedadPage = () => {
@@ -26,8 +26,8 @@ const NewTipoPropiedadPage = () => {
                 alert('Tipo de propiedad agregado correctamente.');
         } catch (error) {
 
-            console.error("Error al agregar tipo de propiedad:", error["mensaje: "]);
-            alert(error["mensaje: "]);
+            console.error("Error al agregar tipo de propiedad:", error.mensaje);
+            alert(error.mensaje);
         }
     };
 

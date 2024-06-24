@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { obtenerReservas, eliminarReserva } from './reservaServices';
+import { obtenerReservas, eliminarReserva } from '../../services/reservaServices';
 import '../../assets/styles/reservasStyles/ReservasPage.css';
 import AlertComponent from '../../components/AlertComponent'; 
 
@@ -44,10 +44,11 @@ const ReservaPage = () => {
                 return;
             }
                 setReservas(reservas.filter(reserva => reserva.id !== reservaIdToDelete));
-                alert("Reserva eliminada correctamente");
+                console.log(data)
+                alert(data.mensaje);
         } catch (error) {
-            console.error('Error al eliminar la reserva: ', error["mensaje: "]);
-            alert(error["mensaje: "])
+            console.error('Error al eliminar la reserva: ', error.mensaje);
+            alert(error.mensaje)
         }
     };
     
@@ -90,7 +91,6 @@ const ReservaPage = () => {
                 </tbody>
             </table>
 
-            {/* Modal de confirmación */}
             <AlertComponent
                 show={showModal}
                 handleClose={handleCloseModal}

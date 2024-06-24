@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { obtenerReservas, editarReserva } from './reservaServices';
+import { obtenerReservas, editarReserva } from '../../services/reservaServices';
 
 const EditReserva = () => {
     const { id } = useParams();
@@ -43,11 +43,11 @@ const EditReserva = () => {
                 setMensaje("Error al comunicarse con el servidor")
                 return;
             }
-            alert(data["mensaje: "])
+            alert(data.mensaje)
             navigate('/reserva');
         }catch(error){
-            console.error('Error al editar reserva: ', error["mensaje: "]);
-            alert(error["mensaje: "])
+            console.error('Error al editar reserva: ', error.mensaje);
+            alert(error.mensaje)
             setMensaje('Error al editar reserva.');
         }
         }

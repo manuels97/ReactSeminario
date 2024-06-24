@@ -5,7 +5,7 @@ const API_URL = 'http://localhost/reservas';
 export const obtenerReservas = async () => {
     try {
         const response = await axios.get(API_URL);
-        console.log("Se encontraron las reservas",response.data)
+        // console.log("Se encontraron las reservas",response.data)
         if (response.data.code !== 200){
             throw response.data.datos
         }
@@ -31,9 +31,8 @@ export const crearReserva = async (propiedad, inquilino, fechaDesde, cantidadNoc
             valor_total: valorTotal
         });
         const data= response.data
-        if (!(data["code: "] >= 200 && data["code: "] < 300)){
-            console.log("COID;",data["code: "])
-            throw response.data
+        if (!(data.code >= 200 && data.code < 300)){       
+            throw data.response
         }
         return data
     } catch (error) {
@@ -42,6 +41,7 @@ export const crearReserva = async (propiedad, inquilino, fechaDesde, cantidadNoc
             alert("Error al comunicarse con el servidor");
             return { handled: true };
         }
+        console.log("ESTO DEV",error.response.data)
         throw error.response.data;
     }
 };
@@ -60,8 +60,7 @@ export const editarReserva = async (id, propiedad, inquilino, fechaDesde, cantid
             valor_total: valorTotal
         });
         const data= response.data
-        if (!(data["code: "] >= 200 && data["code: "] < 300)){
-            console.log("COID;",data["code: "])
+        if (!(data.code >= 200 && data.code < 300)){
             throw response.data
         }
         return data
@@ -79,8 +78,7 @@ export const eliminarReserva = async (id) => {
     try {
         const response = await axios.delete(`${API_URL}/${id}`);
         const data= response.data;
-        if (!(data["code: "] >= 200 && data["code: "] < 300)){
-            console.log("COID;",data["code: "])
+        if (!(data.code >= 200 && data.code < 300)){
             throw response.data
         }
         return data

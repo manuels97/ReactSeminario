@@ -22,17 +22,15 @@ export async function obtenerTiposPropiedad() {
 export async function agregarTipoPropiedad(nombre) {
     try {
         const response = await axios.post(API_URL, { nombre });
-        const data = response.data;
-        // console.log("Respuesta al agregar tipo de propiedad:", data);
-        // return data;
-        if (data["code: "] !== 200){
+        const data = response.data;        
+        if (data.code !== 200){
             throw data
         }
         return data
     } catch (error) {
         console.log(error)
-        if(error.response.status===404||error.response.status===405){ //Si es error de url o sv lo aviso aca
-            console.error(error.response); 
+        if(error.code===404||error.code===405){ //Si es error de url o sv lo aviso aca
+            console.error(error); 
             alert("Error al comunicarse con el servidor");
             return { handled: true };//para que no se propague el error
         }
@@ -46,12 +44,12 @@ export async function eliminarTipoPropiedad(id) {
     try {
         console.log("ID a eliminar en el servicio:", id);
         const response = await axios.delete(`${API_URL}/${id}`);
-        if (response.data["code: "] !== 200){
+        if (response.data.code !== 200){
             throw response.data
         }
         return response.data;
     } catch (error) {
-        if(error.response.status===404||error.response.status===405){ //Si es error de url o sv lo aviso aca
+        if(error.code===404||error.code===405){ //Si es error de url o sv lo aviso aca
             console.error(error.response); 
             alert("Error al comunicarse con el servidor");
             return { handled: true };//para que no se propague el error
@@ -65,12 +63,12 @@ export async function eliminarTipoPropiedad(id) {
 export async function editarTipoPropiedad(id, nombre) {
     try {
         const response = await axios.put(`${API_URL}/${id}`, { nombre });
-        if (response.data["code: "] !== 200) {
+        if (response.data.code !== 200) {
             throw response.data
         }
         return response.data;
     } catch (error) {
-        if(error.response.status===404||error.response.status===405){ //Si es error de url o sv lo aviso aca
+        if(error.code===404||error.code===405){ //Si es error de url o sv lo aviso aca
             console.error(error.response); 
             alert("Error al comunicarse con el servidor");
             return { handled: true };//para que no se propague el error

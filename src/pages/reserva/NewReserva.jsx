@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { crearReserva } from './reservaServices';
+import { crearReserva } from '../../services/reservaServices';
 
 const NewReserva = () => {
     const [propiedad, setPropiedad] = useState('');
@@ -15,16 +15,16 @@ const NewReserva = () => {
         e.preventDefault();
         try {
             const data = await crearReserva(propiedad, inquilino, fechaDesde, cantidadNoches, valorTotal);
-            console.log("RETORNO: ",data)
             if (data.handled) {
                 setMensaje("Error al comunicarse con el servidor")
                 return;
             }
-            alert(data["mensaje: "])
+            alert(data.mensaje)
             navigate('/reserva');
         } catch (error) {
-            console.error('Error al crear ddddddreserva:', error);
-            setMensaje(error["mensaje: "]);
+            console.error('Error al crear reserva:', error);
+            alert(error.mensaje);
+            setMensaje(error.mensaje);
         }
     };
     

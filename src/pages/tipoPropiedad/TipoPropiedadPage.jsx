@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../../assets/styles/tipoPropiedadStyles/TipoPropiedadPage.css';
 import AlertComponent from '../../components/AlertComponent';
-import { obtenerTiposPropiedad, eliminarTipoPropiedad } from './TipoPropiedadPageServices';
+import { obtenerTiposPropiedad, eliminarTipoPropiedad } from '../../services/TipoPropiedadPageServices';
 
 const TipoPropiedadPage = () => {
     const [tiposPropiedad, setTiposPropiedad] = useState([]);
@@ -42,12 +42,12 @@ const TipoPropiedadPage = () => {
                     return;
                 }
                     setTiposPropiedad(prevTiposPropiedad => prevTiposPropiedad.filter(tipo => tipo.id !== deleteId));
-                    alert(resultado["mensaje: "]); 
+                    alert(resultado.mensaje); 
                     setShowAlert(false);
                 }
             catch (error) {
-                console.error("Error al eliminar tipo de propiedad:", error["mensaje: "]);
-                alert(error["mensaje: "]);
+                console.error("Error al eliminar tipo de propiedad:", error.mensaje);
+                alert(error.mensaje);
                 setShowAlert(false);
             }
         }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { obtenerTiposPropiedad, editarTipoPropiedad } from './TipoPropiedadPageServices';
+import { obtenerTiposPropiedad, editarTipoPropiedad } from '../../services/TipoPropiedadPageServices';
 
 const EditTipoPropiedadPage = () => {
     const { id } = useParams();
@@ -39,7 +39,7 @@ const EditTipoPropiedadPage = () => {
                 alert("Tipo propiedad actualizado correctamente")
                 navigate('/tipo_propiedad');
             }catch(error){
-                alert(error["mensaje: "])
+                alert(error.mensaje)
                 setMensaje('No se puedo actualizar el nombre');
             }
     };
